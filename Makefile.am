@@ -21,6 +21,14 @@ EXTRA_DIST += CMakeLists.txt tesseract.pc.cmake cmake VERSION
 DIST_SUBDIRS = $(SUBDIRS)
 
 EXTRA_PROGRAMS =
+CXXFLAGS += -std=c++17 -D_GLIBCXX_USE_CXX11_ABI=0 -stdlib=libc++
+CXXFLAGS += -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION
+TESSERACT_CXXFLAGS += -std=c++17
+TESSERACT_CXXFLAGS += -D_HAS_STRING_VIEW=1
+TESSERACT_CXXFLAGS += -std=c++17 -stdlib=libc++ -lc++fs
+TESSERACT_CXXFLAGS += -D_WIN32_WINNT=0x0601  # Windows 7+
+#TESSERACT_CXXFLAGS += /std:c++17             # MSVC互換
+CXXFLAGS += $(TESSERACT_CXXFLAGS)
 
 uninstall-hook:
 	rm -rf $(DESTDIR)$(pkgincludedir)
