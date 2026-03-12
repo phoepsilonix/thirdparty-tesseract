@@ -137,6 +137,18 @@ protected:
   // the output string returned by GetOutput. Note that s is not necessarily
   // '\0' terminated (and can contain '\0' within it).
   // This method will grow the output buffer if needed.
+void AppendData(const char *s, int len) {
+#if __cplusplus >= 201703L && defined(__has_include)
+# if __has_include(<string_view>)
+  AppendData(std::string_view(s, len));
+# else
+  AppendData(std::string(s, len));  // string_view なし時は string にフォールバック
+# endif
+#else
+  AppendData(std::string(s, len));  // 旧規格時は string にフォールバック
+#endif
+}
+
   void AppendData(const char *s, int len);
 
   template <typename T>
