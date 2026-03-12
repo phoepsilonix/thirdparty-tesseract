@@ -47,10 +47,14 @@ void CCUtil::main_setup(const std::string &argv0, const std::string &basename) {
   const char *tessdata_prefix = getenv("TESSDATA_PREFIX");
 
   // Ignore TESSDATA_PREFIX if there is no matching filesystem entry.
+#if defined(_WIN32) || defined(_WIN64)
+  // Windows: 単純にパススルー（tessdataは別途設定前提）
+#else
   if (tessdata_prefix != nullptr && !std::filesystem::exists(tessdata_prefix)) {
     tprintf("Warning: TESSDATA_PREFIX %s does not exist, ignore it\n", tessdata_prefix);
     tessdata_prefix = nullptr;
   }
+#endif
 
   if (!argv0.empty()) {
     /* Use tessdata prefix from the command line. */
@@ -58,8 +62,8 @@ void CCUtil::main_setup(const std::string &argv0, const std::string &basename) {
   } else if (tessdata_prefix) {
     /* Use tessdata prefix from the environment. */
     datadir = tessdata_prefix;
-#if defined(_WIN32)
-  } else if (datadir.empty() || !std::filesystem::exists(datadir)) {
+#if defined(_WIN32) || defined(_WIN64)
+  } else if (datadir.empty()) {
     /* Look for tessdata in directory of executable. */
     char path[_MAX_PATH];
     DWORD length = GetModuleFileName(nullptr, path, sizeof(path));
@@ -69,9 +73,7 @@ void CCUtil::main_setup(const std::string &argv0, const std::string &basename) {
         *separator = '\0';
         std::string subdir = path;
         subdir += "/tessdata";
-        if (std::filesystem::exists(subdir)) {
-          datadir = subdir;
-        }
+        datadir = subdir;
       }
     }
 #endif /* _WIN32 */

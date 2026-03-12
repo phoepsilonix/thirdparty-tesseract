@@ -137,13 +137,11 @@ protected:
   // the output string returned by GetOutput. Note that s is not necessarily
   // '\0' terminated (and can contain '\0' within it).
   // This method will grow the output buffer if needed.
+  // 宣言のみ！定義は絶対書かない
   void AppendData(const char *s, int len);
 
   template <typename T>
-  auto AppendData(T &&d) {
-    AppendData(d.data(), d.size());
-    return d.size();
-  }
+  size_t AppendData(T &&d);
 
 private:
   TessResultRenderer *next_;   // Can link multiple renderers together

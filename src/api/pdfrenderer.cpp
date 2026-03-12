@@ -587,8 +587,10 @@ bool TessPDFRenderer::BeginDocumentHandler() {
 #ifndef NO_PDF_COMPRESSION
   lept_free(comp);
 #endif
-  objsize += AppendData("endstream\n"sv);
-  objsize += AppendData("endobj\n"sv);
+  AppendData("endstream\n", 11);
+  objsize += 11;
+  AppendData("endobj\\n", 8);
+  objsize += 8;
   AppendPDFObjectDIY(objsize);
 
   const char stream2[] =
@@ -678,8 +680,10 @@ bool TessPDFRenderer::BeginDocumentHandler() {
   objsize = stream.str().size();
   AppendData(reinterpret_cast<const char *>(font), size);
   objsize += size;
-  objsize += AppendData("endstream\n"sv);
-  objsize += AppendData("endobj\n"sv);
+  AppendData("endstream\n", 11);
+  objsize += 11;
+  AppendData("endobj\n", 8);
+  objsize += 8;
   AppendPDFObjectDIY(objsize);
   return true;
 }
@@ -901,8 +905,10 @@ bool TessPDFRenderer::AddImageHandler(TessBaseAPI *api) {
 #ifndef NO_PDF_COMPRESSION
   lept_free(comp_pdftext);
 #endif
-  objsize += AppendData("endstream\n"sv);
-  objsize += AppendData("endobj\n"sv);
+  AppendData("endstream\n", 11);
+  objsize += 11;
+  AppendData("endobj\n", 8);
+  objsize += 8;
   AppendPDFObjectDIY(objsize);
 
   if (!textonly_) {

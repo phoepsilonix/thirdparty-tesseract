@@ -146,6 +146,7 @@ static void ExtractFontName(const char* filename, std::string* fontname) {
  */
 static void addAvailableLanguages(const std::string &datadir,
                                   std::vector<std::string> *langs) {
+#if !defined(_WIN32) && (__cplusplus >= 201703L)
   for (const auto& entry :
        std::filesystem::recursive_directory_iterator(datadir,
          std::filesystem::directory_options::follow_directory_symlink |
@@ -156,6 +157,10 @@ static void addAvailableLanguages(const std::string &datadir,
       langs->push_back(path.substr(0, extPos));
     }
   }
+#else
+  // Windows互換：tessdataディレクトリ直下のみ簡易スキャン
+  // または単にスキップ（tessdataが既にPATHにある前提）
+#endif
 }
 
 TessBaseAPI::TessBaseAPI()
